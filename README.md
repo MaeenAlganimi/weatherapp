@@ -32,4 +32,4 @@ A beautiful, modern weather app built with Node.js, Express, and EJS. Users can 
 
 ---
 
-**Impress your hiring manager with this project!**
+
