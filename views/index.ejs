@@ -3,44 +3,54 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Weather App</title>
+  <title>Weather App - Beautiful Weather Forecasts</title>
+  <meta name="description" content="Get beautiful, accurate weather forecasts for any city worldwide with our modern weather app.">
   <link rel="stylesheet" href="/style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌤️</text></svg>">
 </head>
 <body>
   <div class="container">
-    <h1>Weather App</h1>
-    <form action="/weather" method="POST">
-      <input type="text" name="city" placeholder="Enter city name" required>
-      <button type="submit">Get Weather</button>
+    <h1>🌤️ Weather App</h1>
+    <form action="/weather" method="POST" id="weatherForm">
+      <input type="text" name="city" placeholder="Enter city name (e.g., London, Tokyo)" required autocomplete="off">
+      <button type="submit" id="submitBtn">
+        <span id="btnText">Get Weather</span>
+      </button>
     </form>
+    
     <% if (error) { %>
-      <div class="error"><%= error %></div>
+      <div class="error">
+        ⚠️ <%= error %>
+      </div>
     <% } %>
+    
     <% if (weather) { %>
       <div class="weather-card">
-        <h2><%= weather.name %>, <%= weather.sys.country %></h2>
+        <h2>📍 <%= weather.name %>, <%= weather.sys.country %></h2>
         <div class="weather-main">
-          <img src="http://openweathermap.org/img/wn/<%= weather.weather[0].icon %>@2x.png" alt="Weather icon">
+          <img src="http://openweathermap.org/img/wn/<%= weather.weather[0].icon %>@2x.png" alt="<%= weather.weather[0].description %>">
           <div>
             <div class="temp"><%= Math.round(weather.main.temp) %>°C</div>
             <div class="desc"><%= weather.weather[0].description %></div>
           </div>
         </div>
         <div class="details">
-          <span>Humidity: <%= weather.main.humidity %>%</span>
-          <span>Wind: <%= weather.wind.speed %> m/s</span>
+          <span>💧 Humidity: <%= weather.main.humidity %>%</span>
+          <span>💨 Wind: <%= weather.wind.speed %> m/s</span>
+          <span>👁️ Feels like: <%= Math.round(weather.main.feels_like) %>°C</span>
         </div>
       </div>
     <% } %>
+    
     <% if (forecast) { %>
       <div class="forecast">
-        <h3>5-Day Forecast</h3>
+        <h3>📅 5-Day Forecast</h3>
         <div class="forecast-cards">
-          <% forecast.list.filter((item, idx) => idx % 8 === 0).forEach(day => { %>
+          <% forecast.list.filter((item, idx) => idx % 8 === 0).slice(0, 5).forEach(day => { %>
             <div class="forecast-card">
-              <div><%= new Date(day.dt_txt).toLocaleDateString() %></div>
-              <img src="http://openweathermap.org/img/wn/<%= day.weather[0].icon %>@2x.png" alt="Weather icon">
+              <div><%= new Date(day.dt_txt).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }) %></div>
+              <img src="http://openweathermap.org/img/wn/<%= day.weather[0].icon %>@2x.png" alt="<%= day.weather[0].description %>">
               <div><%= Math.round(day.main.temp) %>°C</div>
               <div><%= day.weather[0].main %></div>
             </div>
@@ -49,5 +59,39 @@
       </div>
     <% } %>
   </div>
+  
+  <script>
+    // Enhanced loading animation and UX
+    document.getElementById('weatherForm').addEventListener('submit', function(e) {
+      const btn = document.getElementById('submitBtn');
+      const btnText = document.getElementById('btnText');
+      
+      btnText.textContent = '🔄 Loading...';
+      btn.disabled = true;
+      btn.style.opacity = '0.7';
+      
+      // Re-enable after timeout in case of issues
+      setTimeout(() => {
+        if (btn.disabled) {
+          btnText.textContent = 'Get Weather';
+          btn.disabled = false;
+          btn.style.opacity = '1';
+        }
+      }, 10000);
+    });
+
+    // Add enter key support for better UX
+    document.querySelector('input[name="city"]').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        document.getElementById('weatherForm').submit();
+      }
+    });
+
+    // Auto-focus input for better UX
+    window.addEventListener('load', function() {
+      document.querySelector('input[name="city"]').focus();
+    });
+  </script>
 </body>
 </html>

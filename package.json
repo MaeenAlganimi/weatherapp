@@ -1,14 +1,19 @@
 {
   "name": "weather-app",
   "version": "1.0.0",
+  "description": "A beautiful, modern weather app built with Node.js, Express, and EJS. Features real-time weather data and 5-day forecasts powered by OpenWeatherMap API.",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
+    "dev": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "keywords": ["weather", "forecast", "nodejs", "express", "ejs", "responsive", "modern-ui"],
+  "author": "Maeen Alganimi",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0"
+  },
   "dependencies": {
     "axios": "^1.10.0",
     "dotenv": "^17.0.0",
